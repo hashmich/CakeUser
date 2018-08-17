@@ -95,16 +95,15 @@ class User extends UsersAppModel {
 				$this->data = $user;
 				return $user;
 			}
-		}else{
-			$this->invalidate('email', 'This Email Address does not exist in the system.');
-			if(!$user[$this->alias]['active']) {
-				$this->invalidate('email', 'This account is blocked. Please contact an administrator.');
-			}
-			if(Configure::read('Users.adminConfirmRegistration')
+		}elseif(!empty($user) AND Configure::read('Users.adminConfirmRegistration')
 			AND !$user[$this->alias]['approved']) {
-				$this->invalidate('email', 'This account has not yet been approved. Please wait for approval by an administrator.');
-			}
-		}
+            $this->invalidate('email', 'This account has not yet been approved. Please wait for approval by an administrator.');
+        }elseif(!empty($user) AND !$user[$this->alias]['active']) {
+            $this->invalidate('email', 'This account is blocked. Please contact an administrator.');
+        }else{
+            $this->invalidate('email', 'This Email Address does not exist in the system.');
+        }
+
 		return false;
 	}
 	
