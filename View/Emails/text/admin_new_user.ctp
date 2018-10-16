@@ -7,7 +7,7 @@ if(!empty($data[$model])) {
 	echo "Details (database entry): \n\n";
 	foreach($data[$model] as $fieldname => $value) {
         if(in_array($fieldname, array('modified','updated','password','shib_eppn','active','approved',
-            'email_verified','is_admin','user_admin','last_login','password_token','email_token',
+            'new_email','email_verified','is_admin','user_admin','last_login','password_token','email_token',
             'approval_token','password_token_expires','email_token_expires','approval_token_expires')))
             continue;
         // handle foreign keys
@@ -16,7 +16,7 @@ if(!empty($data[$model])) {
             $value = $course[$modelname]['name'];
             $fieldname = $modelname;
         }
-	    echo str_pad($fieldname . ':', 24, " ") . "			" . $value . "\n";
+	    echo str_pad($fieldname . ':', 24, " ") . "\t\t" . $value . "\n";
 	}
 	echo "\n\n";
 	echo "Click here for instant approval: \n";
