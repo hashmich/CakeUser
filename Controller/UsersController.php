@@ -101,7 +101,10 @@ class UsersController extends UsersAppController {
 				);
 				$this->getEventManager()->dispatch($Event);
 				$this->{$this->modelClass}->id = $this->Auth->user('id');
-				$this->{$this->modelClass}->saveField('last_login', date('Y-m-d H:i:s'));
+				$this->{$this->modelClass}->save(array(
+					'modified' => false,
+					'last_login' => date('Y-m-d H:i:s')
+				));
 				if($this->here == $this->Auth->loginRedirect) {
 					$this->Auth->loginRedirect = '/';
 				}
