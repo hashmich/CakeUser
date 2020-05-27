@@ -324,6 +324,15 @@ class UsersController extends UsersAppController {
 					'conditions' => array(
 						$this->modelClass . '.user_admin' => 1,
 						$this->modelClass . '.active' => 1)));
+				if(empty($admins)) {
+					$admins = $this->find('all', array(
+						'contain' => array(),
+						'conditions' => array(
+							$this->modelClass . '.is_admin' => 1,
+							$this->modelClass . '.active' => 1
+						)
+					));
+				}
 				if($admins) {
 					foreach($admins as $admin) {
 						$mailOpts['email'] = $admin[$this->modelClass]['email']; 
@@ -332,7 +341,9 @@ class UsersController extends UsersAppController {
 						}
 					}
 				}
-			}elseif($mailOpts['email'] = Configure::read('Users.adminEmailAddress')) {
+			}
+			// test if user-admin email address is present in config
+			elseif($mailOpts['email'] = Configure::read('Users.adminEmailAddress')) {
 				return $this->_sendUserManagementMail($mailOpts);
 			}
 		}
