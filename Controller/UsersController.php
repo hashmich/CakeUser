@@ -178,7 +178,6 @@ class UsersController extends UsersAppController {
 	
 	
 	public function profile($id = null) {
-		//$this->plugin = 'Users';
 		$user = array();
 		$auth_user = $this->Auth->user();
 		$admin = $this->DefaultAuth->isAdmin();
@@ -203,10 +202,15 @@ class UsersController extends UsersAppController {
 			$result = $this->{$this->modelClass}->saveProfile($this->request->data, $admin);
 			if($result) {
 				if(empty($id)) {
-					$this->Flash->set('Please log out and in again to let the changes take effect.');
-				}else{
-					$this->Flash->set('Profile updated');
+					$user = $this->{$this->modelClass}->find('first', array(
+						'contain' => array(),
+						'conditions' => array($this->modelClass . '.id' => $auth_user['id'])
+					));
+					unset($user[$this->modelClass]['password']);
+					$this->Auth->login($user[$this->modelClass]);
+					$this->set('auth_user', $this->Auth->user());
 				}
+				$this->Flash->set('Profile updated');
 				$this->redirect(array(
 					'plugin' => null,
 					'controller' => 'users',
